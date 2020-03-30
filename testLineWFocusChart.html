@@ -32,9 +32,12 @@
   
 	function createChart(data){
 		nv.addGraph(function() {
-		var chart = nv.models.lineWithFocusChart().margin({top: 30, right: 60, bottom: 50, left: 90}).useInteractiveGuideline(true).yDomain([0, 200]);
+		var chart = nv.models.lineWithFocusChart()
+			.margin({top: 30, right: 60, bottom: 50, left: 90})
+			.useInteractiveGuideline(true)
+			.yDomain([0, 200]);
 		
-		var testData = [ { key: "PM 2.5", values: [{}] } ];
+		var testData = [ { key: "PM 2.5", values: [{}], color: "#444" } ];
 		var val = [];
 		for(var i = 0; i < data.length; i++){
 			val.push({x:Date.parse(data[i].timestamp), y:data[i].pm2_5});
@@ -63,35 +66,35 @@
 			.attr("y", 0) // 
 			.attr("width", 10000) // full width
 			.attr("height", 143) // height
-			.attr("fill", "rgba(140,22,22, 0.3)"); // transparency color to see grid
+			.attr("fill", "rgba(140,22,22, 0.4)"); // transparency color to see grid
 		//Purple
 		d3.select('.nv-groups').append("rect")
 			.attr("x", 0)
 			.attr("y", 143)
 			.attr("width", 10000) // full width
 			.attr("height", 142) // height
-			.attr("fill", "rgba(76,0,153, 0.3)"); // transparency color to see grid
+			.attr("fill", "rgba(76,0,153, 0.4)"); // transparency color to see grid
 		//Red
 		d3.select('.nv-groups').append("rect")
 			.attr("x", 0)
 			.attr("y", 285)
 			.attr("width", 10000) // full width
 			.attr("height", 143) // height
-			.attr("fill", "rgba(220,0,0, 0.3)"); // transparency color to see grid
+			.attr("fill", "rgba(220,0,0, 0.4)"); // transparency color to see grid
 		//Orange
 		d3.select('.nv-groups').append("rect")
 			.attr("x", 0)
 			.attr("y", 428)
 			.attr("width", 10000) // full width
 			.attr("height", 72) // height
-			.attr("fill", "rgba(255,128,0, 0.3)"); // transparency color to see grid
+			.attr("fill", "rgba(255,128,0, 0.4)"); // transparency color to see grid
 		//Yellow
 		d3.select('.nv-groups').append("rect")
 			.attr("x", 0)
 			.attr("y", 500)
 			.attr("width", 10000) // full width
 			.attr("height", 72) // height
-			.attr("fill", "rgba(255,255,0, 0.3)"); // transparency color to see grid
+			.attr("fill", "rgba(255,255,0, 0.4)"); // transparency color to see grid
 		
 		
 		
