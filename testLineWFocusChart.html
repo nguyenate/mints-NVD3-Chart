@@ -16,20 +16,22 @@
     
     <script type="text/javascript">
     
-	//get data from api
+	//get data from api and creates the chart
 	async function getData(){
 		const api_url = "http://mintsdata.utdallas.edu:3000/data/001e06323a06/2020-03-18T00:00:00.00Z/2020-03-19T00:00:00.00Z";
 		const getData = await fetch(api_url)
-			.then((resp) => resp.json())
+			.then((resp) => resp.json())	//format response as JSON
 			.then((respJSON) => {
 				const data = respJSON;
+				//calls chart function here to make sure the data has arrived
 				createChart(data);
 			})
 			.catch(function(error) {
 				console.log(error);
 			});
 	}
-  
+	
+	//creates chart
 	function createChart(data){
 		nv.addGraph(function() {
 		var chart = nv.models.lineWithFocusChart()
@@ -38,6 +40,8 @@
 			.yDomain([0, 200]);
 		
 		var testData = [ { key: "PM 2.5", values: [{}], color: "#444" } ];
+		
+		//formats data to put into chart
 		var val = [];
 		for(var i = 0; i < data.length; i++){
 			val.push({x:Date.parse(data[i].timestamp), y:data[i].pm2_5});
@@ -47,6 +51,7 @@
 		chart.xAxis
 			.staggerLabels(true)
 			.tickFormat(function(d){return d3.time.format('%b %d %I:%M:%S%p')(new Date(d))});
+		//focus chart x-axis
 		chart.x2Axis
 			.tickValues([])
 			.tickFormat(function(d){return d3.time.format('%b %d %I:%M:%S%p')(new Date(d))});
@@ -59,47 +64,44 @@
 			.transition().duration(500)
 			.call(chart);
 			
-		//background color(s)
+		//background color(s) (These are actually in front of the chart. Currently unable to move to behind the chart)
 		//Maroon
 		d3.select('.nv-groups').append("rect")
-			.attr("x", 0) // 
-			.attr("y", 0) // 
+			.attr("x", 0) //start width
+			.attr("y", 0) //start height
 			.attr("width", 10000) // full width
 			.attr("height", 143) // height
-			.attr("fill", "rgba(140,22,22, 0.4)"); // transparency color to see grid
+			.attr("fill", "rgba(140,22,22, 0.4)");
 		//Purple
 		d3.select('.nv-groups').append("rect")
 			.attr("x", 0)
 			.attr("y", 143)
-			.attr("width", 10000) // full width
-			.attr("height", 142) // height
-			.attr("fill", "rgba(76,0,153, 0.4)"); // transparency color to see grid
+			.attr("width", 100000)
+			.attr("height", 142)
+			.attr("fill", "rgba(76,0,153, 0.4)");
 		//Red
 		d3.select('.nv-groups').append("rect")
 			.attr("x", 0)
 			.attr("y", 285)
-			.attr("width", 10000) // full width
-			.attr("height", 143) // height
-			.attr("fill", "rgba(220,0,0, 0.4)"); // transparency color to see grid
+			.attr("width", 100000)
+			.attr("height", 143)
+			.attr("fill", "rgba(220,0,0, 0.4)");
 		//Orange
 		d3.select('.nv-groups').append("rect")
 			.attr("x", 0)
 			.attr("y", 428)
-			.attr("width", 10000) // full width
-			.attr("height", 72) // height
-			.attr("fill", "rgba(255,128,0, 0.4)"); // transparency color to see grid
+			.attr("width", 100000)
+			.attr("height", 72)
+			.attr("fill", "rgba(255,128,0, 0.4)");
 		//Yellow
 		d3.select('.nv-groups').append("rect")
 			.attr("x", 0)
 			.attr("y", 500)
-			.attr("width", 10000) // full width
-			.attr("height", 72) // height
-			.attr("fill", "rgba(255,255,0, 0.4)"); // transparency color to see grid
+			.attr("width", 100000)
+			.attr("height", 72)
+			.attr("fill", "rgba(255,255,0, 0.4)");
 		
-		
-		
-			
-		//focus chart color
+		//focus chart highlight color
 		d3.selectAll(".nv-brushBackground").selectAll("rect") // select the rectangles in the background group(s)
 			.style("fill","rgb(56, 181, 230)") // style as desired
 			.style("opacity",0.8);
@@ -110,6 +112,7 @@
 		});
 	}
 	
+	//call function to create chart
 	getData();
 
 		

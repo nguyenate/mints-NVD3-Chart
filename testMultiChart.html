@@ -40,13 +40,14 @@
 	console.log(url);
 	*/
 
-	//get data from api
+	//get data from api and creates chart
 	async function getData(){
 		const api_url = "http://mintsdata.utdallas.edu:3000/data/001e06323a06/2020-03-18T00:00:00.00Z/2020-03-19T00:00:00.00Z";
 		const getData = await fetch(api_url)
-			.then((resp) => resp.json())
+			.then((resp) => resp.json())	//format response as JSON
 			.then((respJSON) => {
 				const data = respJSON;
+				//calls chart function here to make sure the data has arrived
 				createChart(data);
 			})
 			.catch(function(error) {
@@ -56,17 +57,19 @@
 
 	//creates the chart
     function createChart(data){
+		//formats the data for the chart
 		var val = [];
 		for(var i = 0; i < data.length; i++){
 			val.push({x:Date.parse(data[i].timestamp), y:data[i].pm2_5});
 		}
 		var testdata = [
+			//data
 			{
 				key: "PM 2.5",
 				values:[{}]
 			},
-			//color ranges
-			{
+			//color ranges of µg/m³
+			{//0-25µg/m³ yellow
 				key: "0-25µg/m³",
 				values: [
 					{x:val[0].x, y:25},
@@ -74,7 +77,7 @@
 				],
 				color: '#ffff44'
 			},
-			{
+			{//25-50µg/m³ orange
 				key: "25-50µg/m³",
 				values: [
 					{x:val[0].x, y:25},
@@ -82,7 +85,7 @@
 				],
 				color: '#ff5500'
 			},
-			{
+			{//50-100µg/m³ red
 				key: "50-100µg/m³",
 				values: [
 					{x:val[0].x, y:50},
@@ -90,7 +93,7 @@
 				],
 				color: '#cc0000'
 			},
-			{
+			{//100-150µg/m³ purple
 				key: "100-150µg/m³",
 				values: [
 					{x:val[0].x, y:50},
@@ -98,7 +101,7 @@
 				],
 				color: '#990099'
 			},
-			{
+			{//150+µg/m³ maroon
 				key: "150+µg/m³",
 				values: [
 					{x:val[0].x, y:50},
@@ -108,9 +111,10 @@
 			}
 		];
 		
+		//sets the chart types among other things
 		testdata[0].type = "line";
 		testdata[0].yAxis = 1;
-		testdata[0].values = val;
+		testdata[0].values = val;	//sets the data from sensor
 		testdata[1].type = "area";
 		testdata[1].yAxis = 1;
 		testdata[2].type = "area";
@@ -127,15 +131,21 @@
 				.margin({top: 30, right: 60, bottom: 50, left: 90})
 				.color(d3.scale.category10().range())
 				.yDomain1([0, 200]);
-			chart.xAxis.tickFormat(function(d){return d3.time.format('%b %d %I:%M:%S%p')(new Date(d))});
-			chart.xAxis.staggerLabels(true);
-			chart.yAxis1.tickFormat(function(d){return d3.format(',.2f')(d) + 'µg/m³'});
+			chart.xAxis
+				.tickFormat(function(d){return d3.time.format('%b %d %I:%M:%S%p')(new Date(d))})
+				.staggerLabels(true);
+			chart.yAxis1
+				.tickFormat(function(d){return d3.format(',.2f')(d) + 'µg/m³'});
 			d3.select('#chart svg')
 				.datum(testdata)
-				.transition().duration(500).call(chart);
+				.transition()
+				.duration(500)
+				.call(chart);
 			return chart;
 		});
 	}
+	
+	//calls function to create the chart
 	getData();
 
 </script>
