@@ -12,10 +12,9 @@ It is much easier to change the size of the graph, but currently unable to add a
 ## testMultiChartSmall
 Resized Multichart to be much smaller for the bubble pop-up of the sensors. Has other minor changes from testMultiChart.
 
-## To DO
+## To Do
 * May want to show the gaps in the data instead of connecting to next point
 * Get latest 24hr data instead of only the data from [this time range](http://mintsdata.utdallas.edu:3000/data/001e06323a06/2020-03-18T00:00:00.00Z/2020-03-19T00:00:00.00Z)
-* 
 
 ## Built With
 * [NVD3](http://nvd3.org/) - Charts library
