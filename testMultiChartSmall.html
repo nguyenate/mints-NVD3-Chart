@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.6/nv.d3.css">
+    <!-- Include d3.js first -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.6/nv.d3.js"></script>
+
+    <style>
+        text {
+            font: 12px sans-serif;
+        }
+        svg {
+            display: block;
+        }
+        html, body, #chart, svg {
+            margin: 0px;
+            padding: 0px;
+            height: 60%;
+            width: 60%;
+        }
+    </style>
+</head>
+<body class='with-3d-shadow with-transitions'>
+
+<div id="chart" >
+    <svg> </svg>
+</div>
+
+<script>
+
+	/*
+	//gets current date and date 24 hours ago
+	var now = new Date();
+	var before = new Date(now);
+	before.setDate(before.getDate() - 1);
+	var sensorID = "001e06323a06";
+	var url = "http://mintsdata.utdallas.edu:3000/data/" + sensorID + "/" + now.toISOString() + "/" + before.toISOString();
+	console.log(url);
+	*/
+
+	//get data from api and creates chart
+	async function getData(){
+		const api_url = "http://mintsdata.utdallas.edu:3000/data/001e06323a06/2020-03-18T00:00:00.00Z/2020-03-19T00:00:00.00Z";
+		const getData = await fetch(api_url)
+			.then((resp) => resp.json())	//format response as JSON
+			.then((respJSON) => {
+				const data = respJSON;
+				//calls chart function here to make sure the data has arrived
+				createChart(data);
+			})
+			.catch(function(error) {
+				console.log(error);
+			});
+	}
+
+	//creates the chart
+    function createChart(data){
+		//formats the data for the chart
+		var val = [];
+		for(var i = 0; i < data.length; i++){
+			val.push({x:Date.parse(data[i].timestamp), y:data[i].pm2_5});
+		}
+		var testdata = [
+			//data
+			{
+				key: "PM 2.5",
+				values:[{}]
+			},
+			//color ranges of µg/m³
+			{//0-25µg/m³ yellow
+				key: "0-25µg/m³",
+				values: [
+					{x:val[0].x, y:25},
+					{x:val[val.length-1].x, y:25}
+				],
+				color: "rgba(255,255,0, 0.7)"
+			},
+			{//25-50µg/m³ orange
+				key: "25-50µg/m³",
+				values: [
+					{x:val[0].x, y:25},
+					{x:val[val.length-1].x, y:25}
+				],
+				color: "rgba(255,128,0, 0.7)"
+			},
+			{//50-100µg/m³ red
+				key: "50-100µg/m³",
+				values: [
+					{x:val[0].x, y:50},
+					{x:val[val.length-1].x, y:50}
+				],
+				color: "rgba(220,0,0, 0.7)"
+			},
+			{//100-150µg/m³ purple
+				key: "100-150µg/m³",
+				values: [
+					{x:val[0].x, y:50},
+					{x:val[val.length-1].x, y:50}
+				],
+				color: "rgba(76,0,153, 0.7)"
+			},
+			{//150+µg/m³ maroon
+				key: "150+µg/m³",
+				values: [
+					{x:val[0].x, y:50},
+					{x:val[val.length-1].x, y:50}
+				],
+				color: "rgba(140,22,22, 0.7)"
+			}
+		];
+		
+		//sets the chart types among other things
+		testdata[0].type = "line";
+		testdata[0].yAxis = 1;
+		testdata[0].values = val;	//sets the data from sensor
+		testdata[1].type = "area";
+		testdata[1].yAxis = 1;
+		testdata[2].type = "area";
+		testdata[2].yAxis = 1;
+		testdata[3].type = "area";
+		testdata[3].yAxis = 1;
+		testdata[4].type = "area";
+		testdata[4].yAxis = 1;
+		testdata[5].type = "area";
+		testdata[5].yAxis = 1;
+		
+		nv.addGraph(function() {
+			var chart = nv.models.multiChart()
+				.margin({top: 30, right: 60, bottom: 50, left: 90})
+				.showLegend(false)
+				.color(d3.scale.category10().range())
+				.yDomain1([0, 200]);
+			chart.xAxis
+				.tickFormat(function(d){return d3.time.format('%I:%M%p')(new Date(d))})
+				.staggerLabels(true);
+			chart.yAxis1
+				.tickValues([25, 50, 100, 150, 200])
+				.tickFormat(function(d){return d3.format(',.1f')(d) + 'µg/m³'})
+				.showMaxMin(false);
+			d3.select('#chart svg')
+				.datum(testdata)
+				.transition()
+				.duration(500)
+				.call(chart);
+			return chart;
+		});
+	}
+	
+	//calls function to create the chart
+	getData();
+
+</script>
+</body>
+</html>
