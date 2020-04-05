@@ -14,4 +14,4 @@ Resized Multichart to be much smaller for the bubble pop-up of the sensors. Has 
 
 
 ## Built With
-* [NVD3](http://nvd3.org/) - Charts
+* [NVD3](http://nvd3.org/) - Charts library
