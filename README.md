@@ -13,8 +13,9 @@ It is much easier to change the size of the graph, but currently unable to add a
 Resized Multichart to be much smaller for the bubble pop-up of the sensors. Has other minor changes from testMultiChart.
 
 ## To Do
-* May want to show the gaps in the data instead of connecting to next point
-* Get latest 24hr data instead of only the data from [this time range](http://mintsdata.utdallas.edu:3000/data/001e06323a06/2020-03-18T00:00:00.00Z/2020-03-19T00:00:00.00Z)
+* May want to show the gaps in the data instead of connecting to next point.
+* Initialize with latest 24hr data instead of the data from [2020-03-18 00:00:00 to 2020-03-19 00:00:00](http://mintsdata.utdallas.edu:3000/data/001e06323a06/2020-03-18T00:00:00.00Z/2020-03-19T00:00:00.00Z).
+* Add a loading screen when getting data from teh api and formatting it.
 
 ## Built With
 * [NVD3](http://nvd3.org/) - Charts library
