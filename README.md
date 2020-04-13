@@ -14,7 +14,7 @@ Resized Multichart to be much smaller for the bubble pop-up of the sensors. Has 
 
 ## To Do
 * May want to show the gaps in the data instead of connecting to next point.
-* Add a loading screen when getting data from teh api and formatting it.
+* Add a loading screen when getting data from the api and formatting it.
 
 ## Built With
 * [NVD3](http://nvd3.org/) - Charts library
