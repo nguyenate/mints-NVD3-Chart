@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.6/nv.d3.js"></script>
 
     <style>
+		.nvd3 .nv-axis line { stroke: #777; opacity: 0.7;}
         text {
             font: 12px sans-serif;
         }
@@ -128,7 +129,7 @@
 						{x:val[0].x, y:25},
 						{x:val[val.length-1].x, y:25}
 					],
-					color: "rgba(255,255,0, 0.65)"
+					color: "rgba(255,255,0, 0.6)"
 				},
 				{//25-50µg/m³ orange
 					key: "25-50µg/m³",
@@ -136,7 +137,7 @@
 						{x:val[0].x, y:25},
 						{x:val[val.length-1].x, y:25}
 					],
-					color: "rgba(255,128,0, 0.65)"
+					color: "rgba(255,128,0, 0.6)"
 				},
 				{//50-100µg/m³ red
 					key: "50-100µg/m³",
@@ -144,7 +145,7 @@
 						{x:val[0].x, y:50},
 						{x:val[val.length-1].x, y:50}
 					],
-					color: "rgba(220,0,0, 0.65)"
+					color: "rgba(220,0,0, 0.6)"
 				},
 				{//100-150µg/m³ purple
 					key: "100-150µg/m³",
@@ -152,7 +153,7 @@
 						{x:val[0].x, y:50},
 						{x:val[val.length-1].x, y:50}
 					],
-					color: "rgba(76,0,153, 0.65)"
+					color: "rgba(76,0,153, 0.6)"
 				},
 				{//150+µg/m³ maroon
 					key: "150+µg/m³",
@@ -160,7 +161,7 @@
 						{x:val[0].x, y:50},
 						{x:val[val.length-1].x, y:50}
 					],
-					color: "rgba(140,22,22, 0.65)"
+					color: "rgba(140,22,22, 0.6)"
 				}
 			];
 			
@@ -189,6 +190,7 @@
 			chart.xAxis
 				.tickFormat(function(d){return d3.time.format('%b %d %I:%M:%S%p')(new Date(d))})
 				.staggerLabels(true);
+			chart.xAxis.ticks
 			chart.yAxis1
 				.tickFormat(function(d){return d3.format(',.2f')(d) + 'µg/m³'});
 			d3.select('#chart svg')
