@@ -20,6 +20,10 @@
             height: 95%;
             width: 95%;
         }
+		form  { display: table;      }
+		p     { display: table-row;  }
+		label { display: table-cell; }
+		input { display: table-cell; }
     </style>
 </head>
 <body class='with-3d-shadow with-transitions'>
@@ -27,28 +31,39 @@
 <div id="chart" >
     <svg> </svg>
 </div>
-<form id="dates">
-	Start Date: <input type="date" name="start_date" min="2020-01-01">
-	End Date: <input type="date" name="start_date" min="2020-01-01">
-	<input type="button" onclick="changeDate()" value="Set">
+<p>
+	<input type="button" onclick="init_chart()" value="Get Last 24-Hours">
+</p>
+<br>
+<form id="dates" style="font-weight: bold;">
+	<p>
+		<label for="start_date">Start Date:</label>
+		<input type="datetime-local" name="start_date" min="2020-01-01">
+	</p>
+	<p>
+		<label for="end_date">End Date:</label>
+		<input type="datetime-local" name="end_date" min="2020-01-01">
+	</p>
+	<input type="button" onclick="changeDate()" value="Apply">
 </form>
 <p id="date-msg"></p>
 <script>
 
-	/*
-	//gets current date and date 24 hours ago
-	var startDate = new Date();
-	var endDate = new Date(startDate);
-	endDate.setDate(endDate.getDate() - 1);
-	var sensorID = "001e06305a12";
-	var api_url = "http://mintsdata.utdallas.edu:3000/data/" + sensorID + "/" + startDate.toISOString() + "/" + endDate.toISOString();
-	console.log(api_url);
-	*/
 	
-	//initialize chart
+	//initialize chart with last 24-hours of data
 	function init_chart(){
-		const api_url = "http://mintsdata.utdallas.edu:3000/data/001e06323a06/2020-03-18T00:00:00.00Z/2020-03-19T00:00:00.00Z";
+		var api_url = getLast24hrs();
 		getData(api_url);
+	}
+	
+	//gets the last 24-hour api url
+	function getLast24hrs(){
+		var endDate = new Date();
+		var startDate = new Date(endDate);
+		startDate.setDate(startDate.getDate() - 1);
+		var sensorID = "001e06323a06";
+		var api_url = "http://mintsdata.utdallas.edu:3000/data/" + sensorID + "/" + startDate.toISOString() + "/" + endDate.toISOString();
+		return api_url;
 	}
 	
 	//changes the date for the data
