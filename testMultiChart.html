@@ -62,7 +62,7 @@
 		var endDate = new Date();
 		var startDate = new Date(endDate);
 		startDate.setDate(startDate.getDate() - 1);
-		var sensorID = "001e06323a06";
+		var sensorID = "001e06305a12";
 		var api_url = "http://mintsdata.utdallas.edu:3000/data/" + sensorID + "/" + startDate.toISOString() + "/" + endDate.toISOString();
 		return api_url;
 	}
@@ -81,7 +81,7 @@
 		
 		var startDate = new Date(dateInput.elements[0].value);
 		var endDate = new Date(dateInput.elements[1].value);
-		var sensorID = "001e06323a06";
+		var sensorID = "001e06305a12";
 		var api_url = "http://mintsdata.utdallas.edu:3000/data/" + sensorID + "/" + startDate.toISOString() + "/" + endDate.toISOString();
 		
 		getData(api_url);
@@ -94,8 +94,7 @@
 			.then((respJSON) => {
 				const data = respJSON;
 				const dataSet = createData(data);
-				//calls chart function here to make sure the data has arrived
-				createChart(dataSet);
+				createChart(dataSet);	//calls chart function here to make sure the data has arrived
 			})
 			.catch(function(error) {
 				console.log(error);
@@ -123,40 +122,40 @@
 					values:[{}]
 				},
 				//color ranges of µg/m³
-				{//0-25µg/m³ yellow
-					key: "0-25µg/m³",
+				{//0-10µg/m³ yellow
+					key: "0-10µg/m³",
 					values: [
-						{x:val[0].x, y:25},
-						{x:val[val.length-1].x, y:25}
+						{x:val[0].x, y:10},
+						{x:val[val.length-1].x, y:10}
 					],
 					color: "rgba(255,255,0, 0.6)"
 				},
-				{//25-50µg/m³ orange
-					key: "25-50µg/m³",
+				{//10-20µg/m³ orange
+					key: "10-20µg/m³",
 					values: [
-						{x:val[0].x, y:25},
-						{x:val[val.length-1].x, y:25}
+						{x:val[0].x, y:10},
+						{x:val[val.length-1].x, y:10}
 					],
 					color: "rgba(255,128,0, 0.6)"
 				},
-				{//50-100µg/m³ red
-					key: "50-100µg/m³",
+				{//20-50µg/m³ red
+					key: "20-50µg/m³",
 					values: [
-						{x:val[0].x, y:50},
-						{x:val[val.length-1].x, y:50}
+						{x:val[0].x, y:30},
+						{x:val[val.length-1].x, y:30}
 					],
 					color: "rgba(220,0,0, 0.6)"
 				},
-				{//100-150µg/m³ purple
-					key: "100-150µg/m³",
+				{//50-100µg/m³ purple
+					key: "50-100µg/m³",
 					values: [
 						{x:val[0].x, y:50},
 						{x:val[val.length-1].x, y:50}
 					],
 					color: "rgba(76,0,153, 0.6)"
 				},
-				{//150+µg/m³ maroon
-					key: "150+µg/m³",
+				{//100+µg/m³ maroon
+					key: "100+µg/m³",
 					values: [
 						{x:val[0].x, y:50},
 						{x:val[val.length-1].x, y:50}
@@ -185,7 +184,7 @@
 			var chart = nv.models.multiChart()
 				.margin({top: 30, right: 60, bottom: 50, left: 90})
 				.color(d3.scale.category10().range())
-				.yDomain1([0, 200]);
+				.yDomain1([0, 150]);
 			chart.legend.updateState(false);
 			chart.xAxis
 				.tickFormat(function(d){return d3.time.format('%b %d %I:%M:%S%p')(new Date(d))})
