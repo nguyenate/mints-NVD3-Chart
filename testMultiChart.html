@@ -36,7 +36,7 @@
 	<input type="button" onclick="init_chart()" value="Get Last 24-Hours">
 </p>
 <br>
-<form id="dates" style="font-weight: bold;">
+<form id="settings" style="font-weight: bold;">
 	<p>
 		<label for="start_date">Start Date:</label>
 		<input type="datetime-local" name="start_date" min="2020-01-01">
@@ -45,9 +45,14 @@
 		<label for="end_date">End Date:</label>
 		<input type="datetime-local" name="end_date" min="2020-01-01">
 	</p>
-	<input type="button" onclick="changeDate()" value="Apply">
+	<p>
+		<label for="interval">Change Interval:</label>
+		<input type="number" name="interval" step="30" value="30" style="text-align:right;">seconds
+	</p>
+	<input type="button" onclick="applyChanges()" value="Apply">
 </form>
-<p id="date-msg"></p>
+<br>
+<p id="error-msg"></p>
 <script>
 
 	
@@ -67,24 +72,36 @@
 		return api_url;
 	}
 	
-	//changes the date for the data
-	function changeDate(){
-		var dateInput = document.getElementById("dates");
-		if(!dateInput.elements[0].value || !dateInput.elements[1].value){
-			document.getElementById("date-msg").innerHTML = "*Please enter a date.";
-			document.getElementById("date-msg").style.color = "red"
+	//Apply changes
+	function applyChanges(){
+		var interval = document.getElementById("settings").elements[2].value;
+		if(!interval){
+			document.getElementById("error-msg").innerHTML = "*Please enter a time interval.";
+			document.getElementById("error-msg").style.color = "red"
 			return;
 		}
 		else{
-			document.getElementById("date-msg").innerHTML = "";
+			document.getElementById("error-msg").innerHTML = "";
 		}
+		
+		var dateInput = document.getElementById("settings");
+		if(dateInput.elements[0].value && dateInput.elements[1].value){
+			var api_url = changeDate();
+			getData(api_url);
+		}
+		else{
+			init_chart();
+		}
+	}
+	
+	//changes the date for the data
+	function changeDate(){
+		var dateInput = document.getElementById("settings");
 		
 		var startDate = new Date(dateInput.elements[0].value);
 		var endDate = new Date(dateInput.elements[1].value);
 		var sensorID = "001e06305a12";
-		var api_url = "http://mintsdata.utdallas.edu:3000/data/" + sensorID + "/" + startDate.toISOString() + "/" + endDate.toISOString();
-		
-		getData(api_url);
+		return "http://mintsdata.utdallas.edu:3000/data/" + sensorID + "/" + startDate.toISOString() + "/" + endDate.toISOString();
 	}
 
 	//get data from api and creates chart
@@ -107,12 +124,48 @@
 		for(var i = 0; i < data.length; i++){
 			val.push({x:Date.parse(data[i].timestamp), y:data[i].pm2_5});
 		}
-		return val;
+		return changeInterval(val);
+	}
+	
+	//average the data according to the specified interval(interval is in seconds)
+	function changeInterval(values){
+		var interval = document.getElementById("settings").elements[2].value;
+		interval = interval * 1000
+		
+		var newValues = [];
+		var temp = [];
+		if(values.length < 2){
+			return values;
+		}
+		temp.push({x:values[0].x, y:values[0].y});
+		for(var i = 1; i < values.length; i++){
+			if(values[i].x - temp[0].x >= interval){
+				var average = 0;
+				for(var j = 0; j < temp.length; j++){
+					average += temp[j].y;
+				}
+				average = average / temp.length;
+				newValues.push({x:temp[0].x, y:average});
+				
+				temp = [];
+			}
+			temp.push({x:values[i].x, y:values[i].y});
+		}
+		if(temp.length >= 1){
+			var average = 0;
+			for(var j = 0; j < temp.length; j++){
+				average += temp[j].y;
+			}
+			average = average / temp.length;
+			newValues.push({x:temp[0].x, y:average});
+		}
+		return newValues;
 	}
 
 	//creates the chart
     function createChart(val){
 		var testdata = [];
+		
 		if(val.length){
 			//formats the data for the chart
 			testdata = [
